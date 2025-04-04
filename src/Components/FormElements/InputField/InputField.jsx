@@ -9,7 +9,10 @@ export const InputField = ({
   type,
   isLogin,
   placeholder,
+  disabled,
+  ...rest
 }) => {
+
   // const [isShow, setIsShow] = useState<boolean>(true)
   const [passwordType, setpasswordType] = useState(type);
   const handleShowPassword = () => {
@@ -20,10 +23,10 @@ export const InputField = ({
     }
   };
   return (
-    <div className="flex flex-col gap-2 items-start">
-      <div className="flex flex-col w-full">
+    <div className="flex flex-col gap-2 items-start w-full">
+      <div className="flex flex-col gap-2 w-full">
         {label && (
-          <label htmlFor="" className="text-[12px] text-blue-500 mb-1">
+          <label htmlFor="" className="">
             {label}
           </label>
         )}
@@ -36,6 +39,8 @@ export const InputField = ({
             value={value}
             onChange={onChange}
             placeholder={placeholder}
+            disabled={disabled}
+            {...rest}
           />
           {type == "password" && (
             <div className="cursor-pointer" onClick={handleShowPassword}>

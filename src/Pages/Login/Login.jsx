@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { InputField } from "../../Components/FormElements/InputField/InputField";
 import { publicRequest } from "../../apis/requestMethods";
 import AuthImage from "../../assets/images/AuthImage.png";
+
 const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({
