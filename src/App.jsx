@@ -4,6 +4,8 @@ import Login from "./Pages/Login/Login";
 import Layout from "./Pages/Layout/Layout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import ProtectRoute from "./Components/ProtectRoute/ProtectRoute";
+import Users from "./Pages/Users/Users";
+import Engineers from "./Pages/Engineers/Engineers";
 
 function App() {
   return (
@@ -23,6 +25,22 @@ function App() {
               element={
                 <ProtectRoute>
                   <Dashboard />
+                </ProtectRoute>
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <ProtectRoute>
+                  <Users />
+                </ProtectRoute>
+              }
+            />
+            <Route
+              path="engineers"
+              element={
+                <ProtectRoute>
+                  <Engineers />
                 </ProtectRoute>
               }
             />
