@@ -1,13 +1,14 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import React from "react";
 import { InputField } from "../../../Components/FormElements/InputField/InputField";
-import { modalStyle } from "../../../utils/constant";
+import { departmentOptions, modalStyle } from "../../../utils/constant";
+import SelectBoxField from "../../../Components/FormElements/SelectBoxField/SelectBoxField";
 
-const AddUserModal = ({
+const AddTicketModal = ({
   open,
   handleChange,
   handleSubmit,
-  userData,
+  ticketData,
   handleClose,
   isView,
 }) => {
@@ -25,53 +26,38 @@ const AddUserModal = ({
           component="h2"
           sx={{ marginBottom: "10px" }}
         >
-          Add User
+          Add Ticket
         </Typography>
-
         <div className="flex gap-2 items-center mb-5">
           <InputField
-            label={"First Name"}
-            value={userData.firstname}
-            name={"firstname"}
+            label={"Title"}
+            value={ticketData.title}
+            name={"title"}
             onChange={handleChange}
             type={"text"}
-            placeholder={"Enter First Name"}
+            placeholder={"Enter Title"}
             disabled={isView}
           />
           <InputField
-            label={"Last Name"}
-            value={userData.lastname}
-            name={"lastname"}
+            label={"Description"}
+            value={ticketData.description}
+            name={"description"}
             onChange={handleChange}
             type={"text"}
-            placeholder={"Enter Last Name"}
+            placeholder={"Enter Description"}
             disabled={isView}
           />
         </div>
-
         <div className="flex gap-2 items-center mb-5">
-          <InputField
-            label={"Email"}
-            value={userData.email}
-            name={"email"}
+          <SelectBoxField
+            label={"Department"}
+            value={ticketData.department}
             onChange={handleChange}
-            type={"text"}
-            placeholder={"Enter Email"}
+            name="department"
+            options={departmentOptions}
             disabled={isView}
           />
-          {!isView && (
-            <InputField
-              label={"Password"}
-              value={userData.password}
-              name={"password"}
-              onChange={handleChange}
-              type={"password"}
-              placeholder={"Enter Password"}
-              disabled={isView}
-            />
-          )}
         </div>
-
         {!isView && (
           <div className="flex justify-end gap-2 mt-5">
             <Button onClick={handleClose} variant="outlined">
@@ -87,4 +73,4 @@ const AddUserModal = ({
   );
 };
 
-export default AddUserModal;
+export default AddTicketModal;

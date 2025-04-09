@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { InputField } from "../../Components/FormElements/InputField/InputField";
 import { publicRequest } from "../../apis/requestMethods";
 import AuthImage from "../../assets/images/AuthImage.png";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/auth/authSlice";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -23,11 +26,11 @@ const Login = () => {
       console.log(response);
 
       if (response.data.success) {
-        // toast.success(response.message);
-        localStorage.setItem("token", response.data.token);
+        dispatch(
+          loginSuccess({ user: response.data.user, token: response.data.token })
+        );
         navigate("/");
       } else {
-        // toast.error(response.message);
       }
     } catch (error) {
       console.log(error?.response?.data?.message);

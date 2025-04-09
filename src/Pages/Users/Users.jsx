@@ -31,7 +31,7 @@ const Users = () => {
     try {
       const res = await userRequset.get("/user/get-all-users");
       if (res.data && res.data.success) {
-        const engData = await res.data.data.map((item, ind) => {
+        const userData = await res.data.data.map((item, ind) => {
           const newItem = {
             ...item,
             id: ind + 1,
@@ -39,9 +39,8 @@ const Users = () => {
           };
           return newItem;
         });
-        setUserList(engData);
+        setUserList(userData);
       }
-      console.log(res);
     } catch (err) {
       console.log(err);
     }
@@ -77,7 +76,6 @@ const Users = () => {
       const res = isEdit
         ? await userRequset.put(`user/update-user/${userData._id}`, data)
         : await userRequset.post("/user/create-user", data);
-      // console.log(res);
       if (res.data && res.data.success) {
         setUserData({ ...emptyData });
         fetchUserList();

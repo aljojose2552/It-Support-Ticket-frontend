@@ -46,7 +46,6 @@ const Engineers = () => {
         });
         setEngineerList(engData);
       }
-      console.log(res);
     } catch (err) {
       console.log(err);
     }
