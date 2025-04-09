@@ -6,8 +6,14 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 import ProtectRoute from "./Components/ProtectRoute/ProtectRoute";
 import Users from "./Pages/Users/Users";
 import Engineers from "./Pages/Engineers/Engineers";
+import { useSelector } from "react-redux";
+import { userState } from "./redux/auth/authSlice";
+import Tickets from "./Pages/Tickets/Tickets";
 
 function App() {
+  const { user } = useSelector(userState);
+
+  const role = user?.role;
   return (
     <div>
       <BrowserRouter>
@@ -15,7 +21,7 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectRoute>
+              <ProtectRoute allowedRoles={["admin", "user", "engineer"]}>
                 <Layout />
               </ProtectRoute>
             }
@@ -23,15 +29,23 @@ function App() {
             <Route
               index
               element={
-                <ProtectRoute>
+                <ProtectRoute allowedRoles={["admin", "user", "engineer"]}>
                   <Dashboard />
+                </ProtectRoute>
+              }
+            />
+            <Route
+              path="/tickets"
+              element={
+                <ProtectRoute allowedRoles={["admin", "user", "engineer"]}>
+                  <Tickets />
                 </ProtectRoute>
               }
             />
             <Route
               path="users"
               element={
-                <ProtectRoute>
+                <ProtectRoute allowedRoles={["admin"]}>
                   <Users />
                 </ProtectRoute>
               }
@@ -39,11 +53,12 @@ function App() {
             <Route
               path="engineers"
               element={
-                <ProtectRoute>
+                <ProtectRoute allowedRoles={["admin"]}>
                   <Engineers />
                 </ProtectRoute>
               }
             />
+            <Route path="*" element={<h2>not found this page</h2>} />
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>

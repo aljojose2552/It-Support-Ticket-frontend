@@ -4,23 +4,7 @@ import SelectBoxField from "../../../Components/FormElements/SelectBoxField/Sele
 import { InputField } from "../../../Components/FormElements/InputField/InputField";
 import axios from "axios";
 import { userRequset } from "../../../apis/requestMethods";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 800,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-  borderRadius: 2,
-};
-
-const options = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" },
-];
+import { departmentOptions, modalStyle } from "../../../utils/constant";
 
 const AddEngineerModal = ({
   open,
@@ -39,7 +23,7 @@ const AddEngineerModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={modalStyle}>
         <Typography
           id="modal-modal-title"
           variant="h6"
@@ -84,7 +68,7 @@ const AddEngineerModal = ({
             value={engineerData.department}
             onChange={handleChange}
             name="department"
-            options={options}
+            options={departmentOptions}
             disabled={isView}
           />
         </div>

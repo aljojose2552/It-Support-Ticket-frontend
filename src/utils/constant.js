@@ -1,0 +1,21 @@
+export const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 800,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 2,
+  };
+  
+
+export const departmentOptions = [
+    { label: "Support Engineer", value: "Support engineer" },
+    { label: "Linux Engineer", value: "Linux engineer" },
+    { label: "Windows Engineer", value: "Windows engineer" },
+    { label: "VM Engineer", value: "VM engineer" },
+    { label: "Cloud Engineer", value: "Cloud engineer" },
+    { label: "DevOps Engineer", value: "DevOps engineer" },
+  ];
