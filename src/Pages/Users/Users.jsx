@@ -3,6 +3,9 @@ import { userRequset } from "../../apis/requestMethods";
 import { Button } from "@mui/material";
 import DataTable from "../../Components/DataTable/DataTable";
 import AddUserModal from "./AddUserModal/AddUserModal";
+import Loader from "../../Components/Loader/Loader";
+import DeleteModal from "../../Components/DeleteModal/DeleteModal";
+import HeadingWithButton from "../../Components/HeadingWithButton/HeadingWithButton";
 
 const emptyData = {
   firstname: "",
@@ -12,6 +15,7 @@ const emptyData = {
 };
 
 const Users = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [addUser, setAddUser] = useState(false);
   const [userList, setUserList] = useState([]);
   const [userData, setUserData] = useState({
@@ -19,6 +23,8 @@ const Users = () => {
   });
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const columns = [
     { label: "ID", field: "id", width: "10%" },
@@ -28,6 +34,8 @@ const Users = () => {
   ];
 
   const fetchUserList = async () => {
+    setIsLoading(true);
+
     try {
       const res = await userRequset.get("/user/get-all-users");
       if (res.data && res.data.success) {
@@ -40,9 +48,13 @@ const Users = () => {
           return newItem;
         });
         setUserList(userData);
+        setIsLoading(false);
       }
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -86,11 +98,21 @@ const Users = () => {
     }
   };
 
-  const handleDelete = async (row) => {
+  const handleDelete = (row) => {
+    setDeleteId(row._id);
+    setDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeleteId("");
+    setDeleteModal(false);
+  };
+  const deleteUser = async () => {
     try {
-      const res = await userRequset.delete(`/user/delete-user/${row._id}`);
+      const res = await userRequset.delete(`/user/delete-user/${deleteId}`);
       if (res.data && res.data.success) {
         fetchUserList();
+        handleCloseDeleteModal();
       }
     } catch (err) {
       console.log(err);
@@ -101,14 +123,17 @@ const Users = () => {
     fetchUserList();
   }, []);
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <div>
-      <div className="flex justify-between items-center ">
-        <h4 className="text-2xl font-semibold">User List </h4>
-        <Button variant="contained" onClick={() => setAddUser(true)}>
-          Add User
-        </Button>
-      </div>
+      <HeadingWithButton
+        buttonLabel={"Add User"}
+        handleClickButton={() => setAddUser(true)}
+        heading={"User List"}
+      />
 
       <DataTable
         columns={columns}
@@ -125,6 +150,12 @@ const Users = () => {
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         isView={isView}
+      />
+      <DeleteModal
+        handleSubmit={deleteUser}
+        handleClose={handleCloseDeleteModal}
+        label={"User"}
+        open={deleteModal}
       />
     </div>
   );

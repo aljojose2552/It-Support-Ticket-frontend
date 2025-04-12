@@ -1,4 +1,6 @@
 import axios from "axios";
+import { store } from "../redux/store";
+import { logout } from "../redux/auth/authSlice";
 
 const BASE_URL = "http://localhost:3000/api";
 
@@ -27,3 +29,22 @@ userRequset.interceptors.request.use(async (config) => {
   }
   return config;
 });
+
+userRequset.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const errorMessage = error?.response?.data?.message;
+
+    if (errorMessage === "jwt expired") {
+      store.dispatch(logout());
+
+      localStorage.removeItem("token");
+
+      alert("Jwt expierd. Please login again.");
+
+      window.location.href = "/login";
+    }
+
+    return Promise.reject(error);
+  }
+);
