@@ -6,6 +6,9 @@ import { userRequset } from "../../apis/requestMethods";
 import { useSelector } from "react-redux";
 import { userState } from "../../redux/auth/authSlice";
 import AssignTicketModal from "./AssignTicketModal/AssignTicketModal";
+import DeleteModal from "../../Components/DeleteModal/DeleteModal";
+import Loader from "../../Components/Loader/Loader";
+import HeadingWithButton from "../../Components/HeadingWithButton/HeadingWithButton";
 
 const emptyData = {
   title: "",
@@ -16,11 +19,12 @@ const emptyData = {
 const columns = [
   { label: "ID", field: "id", width: "5%" },
   { label: "Title", field: "title", width: "10%" },
-  { label: "Description", field: "description", width: "20%" },
+  { label: "Description", field: "description", width: "18%" },
   { label: "Department", field: "department", width: "10%" },
   { label: "Created By", field: "userName", width: "10%" },
   { label: "Assign To", field: "engName", width: "10%" },
-  { label: "Actions", field: "actions", width: "15%" },
+  { label: "Status", field: "status", width: "10%" },
+  { label: "Actions", field: "actions", width: "12%" },
 ];
 
 const updateResValues = async (list) => {
@@ -40,6 +44,7 @@ const updateResValues = async (list) => {
 const Tickets = () => {
   const { user } = useSelector(userState);
   const { role } = user;
+  const [isLoading, setIsLoading] = useState(true);
   const [addTicket, setAddTicket] = useState(false);
   const [assignTicketModal, setAssignTicketModal] = useState(false);
   const [TicketList, setTicketList] = useState([]);
@@ -50,39 +55,57 @@ const Tickets = () => {
   });
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
+  const showAddButton = user.role === "admin" || user.role === "user";
 
   const fetchAssignedTickets = async () => {
+    setIsLoading(true);
     try {
       const res = await userRequset.get("/ticket/get-assinged-tickets");
       if (res.data && res.data.success) {
         const tktData = await updateResValues(res.data.tickets);
         setTicketList(tktData);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
   const fetchCreatedTickets = async () => {
+    setIsLoading(true);
     try {
       const res = await userRequset.get("/ticket/get-createdby-tickets");
       if (res.data && res.data.success) {
         const tktData = await updateResValues(res.data.tickets);
         setTicketList(tktData);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fetchTicketList = async () => {
+    setIsLoading(true);
     try {
       const res = await userRequset.get("/ticket/get-all-tickets");
       if (res.data && res.data.success) {
         const tktData = await updateResValues(res.data.tickets);
         setTicketList(tktData);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -155,11 +178,22 @@ const Tickets = () => {
     setAddTicket(true);
   };
 
-  const handleDelete = async (row) => {
+  const handleDelete = (row) => {
+    setDeleteId(row._id);
+    setDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeleteId("");
+    setDeleteModal(false);
+  };
+
+  const deleteTicket = async () => {
     try {
-      const res = await userRequset.delete(`/ticket/delete-ticket/${row._id}`);
+      const res = await userRequset.delete(`/ticket/delete-ticket/${deleteId}`);
       if (res.data && res.data.success) {
         fetchTicketList();
+        handleCloseDeleteModal();
       }
     } catch (err) {
       console.log(err);
@@ -177,16 +211,18 @@ const Tickets = () => {
     }
   }, []);
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <div>
-      <div className="flex justify-between items-center ">
-        <h4 className="text-2xl font-semibold">Tickets List </h4>
-        {(user.role === "admin" || user.role === "user") && (
-          <Button variant="contained" onClick={() => setAddTicket(true)}>
-            Add Ticket
-          </Button>
-        )}
-      </div>
+      <HeadingWithButton
+        buttonLabel={"Add Ticket"}
+        handleClickButton={() => setAddTicket(true)}
+        heading={"Ticket List"}
+        notShowButton={!showAddButton}
+      />
       <DataTable
         columns={columns}
         data={TicketList}
@@ -213,6 +249,13 @@ const Tickets = () => {
           fetchList={fetchTicketList}
         />
       )}
+
+      <DeleteModal
+        handleSubmit={deleteTicket}
+        handleClose={handleCloseDeleteModal}
+        label={"Ticket"}
+        open={deleteModal}
+      />
     </div>
   );
 };

@@ -47,7 +47,7 @@ const AssignTicketModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={modalStyle}>
+      <Box sx={()=>modalStyle(800)}>
         <Typography
           id="modal-modal-title"
           variant="h6"

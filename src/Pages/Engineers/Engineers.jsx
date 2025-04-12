@@ -3,6 +3,10 @@ import DataTable from "../../Components/DataTable/DataTable";
 import { Button } from "@mui/material";
 import AddEngineerModal from "./AddEngineerModal/AddEngineerModal";
 import { userRequset } from "../../apis/requestMethods";
+import Loader from "../../Components/Loader/Loader";
+import { userState } from "../../redux/auth/authSlice";
+import DeleteModal from "../../Components/DeleteModal/DeleteModal";
+import HeadingWithButton from "../../Components/HeadingWithButton/HeadingWithButton";
 const emptyData = {
   firstname: "",
   lastname: "",
@@ -14,6 +18,7 @@ const emptyData = {
 };
 
 const Engineers = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [addEngineer, setAddEngineer] = useState(false);
   const [engineerList, setEngineerList] = useState([]);
   const [engineerData, setEngineerData] = useState({
@@ -21,6 +26,8 @@ const Engineers = () => {
   });
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const columns = [
     { label: "ID", field: "id", width: "5%" },
@@ -33,6 +40,7 @@ const Engineers = () => {
   ];
 
   const fetchEngineerList = async () => {
+    setIsLoading(true);
     try {
       const res = await userRequset.get("/engineer/get-all-engineers");
       if (res.data && res.data.success) {
@@ -45,9 +53,13 @@ const Engineers = () => {
           return newItem;
         });
         setEngineerList(engData);
+        setIsLoading(false);
       }
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -99,13 +111,24 @@ const Engineers = () => {
     setAddEngineer(true);
   };
 
-  const handleDelete = async (row) => {
+  const handleDelete = (row) => {
+    setDeleteId(row._id);
+    setDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeleteId("");
+    setDeleteModal(false);
+  };
+
+  const deleteEngineer = async () => {
     try {
       const res = await userRequset.delete(
-        `/engineer/delete-engineer/${row._id}`
+        `/engineer/delete-engineer/${deleteId}`
       );
       if (res.data && res.data.success) {
         fetchEngineerList();
+        handleCloseDeleteModal();
       }
     } catch (err) {
       console.log(err);
@@ -116,14 +139,17 @@ const Engineers = () => {
     fetchEngineerList();
   }, []);
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <div>
-      <div className="flex justify-between items-center ">
-        <h4 className="text-2xl font-semibold">Engineers List </h4>
-        <Button variant="contained" onClick={() => setAddEngineer(true)}>
-          Add Engineer
-        </Button>
-      </div>
+      <HeadingWithButton
+        buttonLabel={"Add Engineer"}
+        handleClickButton={() => setAddEngineer(true)}
+        heading={"Engineer List"}
+      />
       <DataTable
         columns={columns}
         data={engineerList}
@@ -138,6 +164,13 @@ const Engineers = () => {
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         isView={isView}
+      />
+
+      <DeleteModal
+        handleSubmit={deleteEngineer}
+        handleClose={handleCloseDeleteModal}
+        label={"Engineer"}
+        open={deleteModal}
       />
     </div>
   );

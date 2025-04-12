@@ -9,11 +9,10 @@ import Engineers from "./Pages/Engineers/Engineers";
 import { useSelector } from "react-redux";
 import { userState } from "./redux/auth/authSlice";
 import Tickets from "./Pages/Tickets/Tickets";
+import Profile from "./Pages/Profile/Profile";
 
 function App() {
-  const { user } = useSelector(userState);
-
-  const role = user?.role;
+  // const { user } = useSelector(userState);
   return (
     <div>
       <BrowserRouter>
@@ -55,6 +54,14 @@ function App() {
               element={
                 <ProtectRoute allowedRoles={["admin"]}>
                   <Engineers />
+                </ProtectRoute>
+              }
+            />
+            <Route
+              path="profile"
+              element={
+                <ProtectRoute allowedRoles={["user", "engineer"]}>
+                  <Profile />
                 </ProtectRoute>
               }
             />

@@ -11,6 +11,7 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
+import { MdAssignmentAdd } from "react-icons/md";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
@@ -23,7 +24,11 @@ const styles = {
     color: "white",
     fontWeight: "bold",
     width,
+    padding: "10px",
   }),
+  tableRow: {
+    padding: "10px",
+  },
 };
 
 const DataTable = ({
@@ -53,7 +58,7 @@ const DataTable = ({
               <TableRow key={index}>
                 {columns.map((col, ind) =>
                   col.field === "actions" ? (
-                    <TableCell key={ind}>
+                    <TableCell key={ind} sx={styles.tableRow}>
                       <IconButton
                         aria-label="view"
                         color="primary"
@@ -79,16 +84,18 @@ const DataTable = ({
                   ) : user.role === "admin" &&
                     col.field === "engName" &&
                     row[col.field] === "Not Assigned" ? (
-                    <TableCell key={ind}>
-                      <Button
-                        variant="contained"
+                    <TableCell key={ind} sx={styles.tableRow}>
+                      <IconButton
+                        color="primary"
                         onClick={() => handleAssignTicket(row)}
                       >
-                        Assign To
-                      </Button>
+                        <MdAssignmentAdd />
+                      </IconButton>
                     </TableCell>
                   ) : (
-                    <TableCell key={ind}>{row[col.field]}</TableCell>
+                    <TableCell key={ind} sx={styles.tableRow}>
+                      {row[col.field]}
+                    </TableCell>
                   )
                 )}
               </TableRow>
