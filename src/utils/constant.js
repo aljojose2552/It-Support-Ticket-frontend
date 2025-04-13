@@ -18,3 +18,8 @@ export const departmentOptions = [
   { label: "Cloud Engineer", value: "Cloud engineer" },
   { label: "DevOps Engineer", value: "DevOps engineer" },
 ];
+
+export const statusOptions = [
+  { label: "In Progress", value: "In Progress" },
+  { label: "Completed", value: "Completed" },
+];

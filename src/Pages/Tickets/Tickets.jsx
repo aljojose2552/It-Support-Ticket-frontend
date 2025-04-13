@@ -158,6 +158,21 @@ const Tickets = () => {
     }
   };
 
+  const handleStatusUpdate = async (status) => {
+    try {
+      const res = await userRequset.patch(
+        `/ticket/status-update-ticket/${ticketData._id}`,
+        { status: status }
+      );
+      if (res.data && res.data.success) {
+        fetchAssignedTickets();
+        handleClose();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleAssignTicket = (row) => {
     setSelectedTicket(row);
     setAssignTicketModal(true);
@@ -238,6 +253,7 @@ const Tickets = () => {
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         isView={isView}
+        handleStatusUpdate={handleStatusUpdate}
       />
 
       {role === "admin" && (

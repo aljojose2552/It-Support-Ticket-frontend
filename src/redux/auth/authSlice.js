@@ -19,7 +19,7 @@ const authslice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      state.isAuthenticated = null;
+      state.isAuthenticated = false;
       // localStorage.removeItem("token");
     },
     updateProfile: (state, action) => {
