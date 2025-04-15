@@ -16,7 +16,6 @@ const AssignTicketModal = ({
     label: `${item.firstname} ${item.lastname}`,
     value: item._id,
   }));
-  console.log(engineer);
   const handleClose = () => {
     setOpen(false);
     setEngineer("");

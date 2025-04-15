@@ -38,10 +38,11 @@ const DataTable = ({
   onDelete,
   onView,
   handleAssignTicket,
+  admin,
 }) => {
   const { user } = useSelector(userState);
   return (
-    <Paper sx={{ width: "100%", margin: "auto", mt: 4 }}>
+    <Paper sx={{ width: "100%", margin: "auto", mt: 2 }}>
       <TableContainer>
         <Table>
           <TableHead sx={styles.tableHead}>
@@ -85,12 +86,16 @@ const DataTable = ({
                     col.field === "engName" &&
                     row[col.field] === "Not Assigned" ? (
                     <TableCell key={ind} sx={styles.tableRow}>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleAssignTicket(row)}
-                      >
-                        <MdAssignmentAdd />
-                      </IconButton>
+                      {admin ? (
+                        "Not Assigned"
+                      ) : (
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleAssignTicket(row)}
+                        >
+                          <MdAssignmentAdd />
+                        </IconButton>
+                      )}
                     </TableCell>
                   ) : (
                     <TableCell key={ind} sx={styles.tableRow}>

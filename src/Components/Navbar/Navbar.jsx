@@ -4,9 +4,11 @@ import { IoIosArrowDown } from "react-icons/io";
 import { Menu, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, userState } from "../../redux/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { user } = useSelector(userState);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -28,6 +30,11 @@ const Navbar = () => {
 
   const handleClose = () => {
     setAnchorEl(null); // close menu
+  };
+
+  const handleNavigate = () => {
+    navigate("/profile");
+    handleClose();
   };
 
   const handleLogout = () => {
@@ -61,9 +68,11 @@ const Navbar = () => {
       </div>
 
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem onClick={handleClose} sx={{ width: 200 }}>
-          Profile
-        </MenuItem>
+        {user.role !== "admin" && (
+          <MenuItem onClick={handleNavigate} sx={{ width: 200 }}>
+            Profile
+          </MenuItem>
+        )}
         <MenuItem onClick={handleLogout} sx={{ width: 200 }}>
           Logout
         </MenuItem>
