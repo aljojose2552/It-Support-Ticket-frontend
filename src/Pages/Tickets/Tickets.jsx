@@ -9,6 +9,7 @@ import AssignTicketModal from "./AssignTicketModal/AssignTicketModal";
 import DeleteModal from "../../Components/DeleteModal/DeleteModal";
 import Loader from "../../Components/Loader/Loader";
 import HeadingWithButton from "../../Components/HeadingWithButton/HeadingWithButton";
+import { updateResValues } from "../../utils/functions/updateTicketApiValues";
 
 const emptyData = {
   title: "",
@@ -26,20 +27,6 @@ const columns = [
   { label: "Status", field: "status", width: "10%" },
   { label: "Actions", field: "actions", width: "12%" },
 ];
-
-const updateResValues = async (list) => {
-  return list.map((item, ind) => {
-    const newItem = {
-      ...item,
-      id: ind + 1,
-      engName: item.assignedTo
-        ? `${item.assignedTo.firstname} ${item.assignedTo.lastname}`
-        : "Not Assigned",
-      userName: `${item.createdBy.firstname} ${item.createdBy.lastname}`,
-    };
-    return newItem;
-  });
-};
 
 const Tickets = () => {
   const { user } = useSelector(userState);
@@ -135,7 +122,7 @@ const Tickets = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     try {
       const res = isEdit
         ? await userRequset.put(
@@ -155,6 +142,21 @@ const Tickets = () => {
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const handleStatusUpdate = async (status) => {
+    try {
+      const res = await userRequset.patch(
+        `/ticket/status-update-ticket/${ticketData._id}`,
+        { status: status }
+      );
+      if (res.data && res.data.success) {
+        fetchAssignedTickets();
+        handleClose();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -238,6 +240,7 @@ const Tickets = () => {
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         isView={isView}
+        handleStatusUpdate={handleStatusUpdate}
       />
 
       {role === "admin" && (

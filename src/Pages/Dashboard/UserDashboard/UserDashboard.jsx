@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { userRequset } from "../../../apis/requestMethods";
-import { LuTicketCheck, LuTickets } from "react-icons/lu";
-import { FaUsers } from "react-icons/fa";
-import { FaUserGear } from "react-icons/fa6";
-import DashboardTiles from "../../../Components/DashboardTiles/DashboardTiles";
-import DataTable from "../../../Components/DataTable/DataTable";
-import { updateResValues } from "../../../utils/functions/updateTicketApiValues";
 import Loader from "../../../Components/Loader/Loader";
+import DashboardTiles from "../../../Components/DashboardTiles/DashboardTiles";
+import {
+  LuTicketCheck,
+  LuTicketMinus,
+  LuTicket,
+  LuTickets,
+} from "react-icons/lu";
+import { updateResValues } from "../../../utils/functions/updateTicketApiValues";
+import DataTable from "../../../Components/DataTable/DataTable";
 
-const AdminDashboard = () => {
+const UserDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [ticketList, setTicketList] = useState([]);
-
-  const [dashboardStats, setDashboardStats] = useState({
-    totalTickets: 0,
-    totalUsers: 0,
-    totalEngineers: 0,
-    resolvedTickets: 0,
+  const [LatestTickets, setLatestTickets] = useState([]);
+  const [ticketStats, setTicketStats] = useState({
+    total: 0,
+    pending: 0,
+    progress: 0,
+    resolved: 0,
   });
 
   const columns = [
@@ -24,29 +26,28 @@ const AdminDashboard = () => {
     { label: "Title", field: "title", width: "10%" },
     { label: "Description", field: "description", width: "18%" },
     { label: "Department", field: "department", width: "10%" },
-    { label: "Created By", field: "userName", width: "10%" },
     { label: "Assign To", field: "engName", width: "10%" },
     { label: "Status", field: "status", width: "10%" },
   ];
 
-  const fetchTicketList = async () => {
+  const fetchLatestCreatedTickets = async () => {
     try {
-      const res = await userRequset.get("/admin/get-latest-tickets");
+      const res = await userRequset.get("/ticket/get-latest-created-tickets");
       if (res.data && res.data.success) {
         const tktData = await updateResValues(res.data.tickets);
-        setTicketList(tktData);
+        setLatestTickets(tktData);
       }
     } catch (error) {
       console.log(error);
     }
   };
-
-  const fetchdashbaordStats = async () => {
+  const fetchEngineerTicketStats = async () => {
     try {
-      const res = await userRequset.get("/admin/get-admin-stats");
+      const res = await userRequset.get("/ticket/get-created-tickets-stats");
       if (res.data && res.data.success) {
-        setDashboardStats(res.data.stats);
+        setTicketStats(res.data.stats);
       }
+      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +57,10 @@ const AdminDashboard = () => {
     const fetchLists = async () => {
       setIsLoading(true);
       try {
-        await Promise.all([fetchTicketList(), fetchdashbaordStats()]);
+        await Promise.all([
+          fetchEngineerTicketStats(),
+          fetchLatestCreatedTickets(),
+        ]);
       } catch (err) {
         console.error("Error fetching data", err);
       } finally {
@@ -65,7 +69,6 @@ const AdminDashboard = () => {
     };
     fetchLists();
   }, []);
-
   if (isLoading) {
     return <Loader />;
   }
@@ -74,29 +77,29 @@ const AdminDashboard = () => {
       <div className="flex items-center gap-10 mb-5">
         <DashboardTiles
           Icon={LuTickets}
-          count={dashboardStats.totalTickets}
-          label={"Total Tickets"}
+          count={ticketStats.total}
+          label={"Total Created Tickets"}
         />
         <DashboardTiles
-          Icon={FaUsers}
-          count={dashboardStats.totalUsers}
-          label={"Total Users"}
+          Icon={LuTicket}
+          count={ticketStats.pending}
+          label={"Pending Tickets"}
         />
         <DashboardTiles
-          Icon={FaUserGear}
-          count={dashboardStats.totalEngineers}
-          label={"Total Engineers"}
+          Icon={LuTicketMinus}
+          count={ticketStats.progress}
+          label={"Tickets In Progress"}
         />
         <DashboardTiles
           Icon={LuTicketCheck}
-          count={dashboardStats.resolvedTickets}
+          count={ticketStats.resolved}
           label={"Completed Tickets"}
         />
       </div>
       <h4 className="text-2xl">Latest Tickets</h4>
-      <DataTable columns={columns} data={ticketList} admin />
+      <DataTable columns={columns} data={LatestTickets} admin />
     </>
   );
 };
 
-export default AdminDashboard;
+export default UserDashboard;
