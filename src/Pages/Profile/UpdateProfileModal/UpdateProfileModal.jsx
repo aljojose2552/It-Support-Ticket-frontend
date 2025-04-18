@@ -5,6 +5,8 @@ import { userRequset } from "../../../apis/requestMethods";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile, userState } from "../../../redux/auth/authSlice";
 import { InputField } from "../../../Components/FormElements/InputField/InputField";
+import { profileUserFormValidation } from "../../../utils/functions/formValidations";
+import { useSnackbar } from "../../../context/snackbarContext";
 const emptyValues = {
   firstname: "",
   lastname: "",
@@ -13,22 +15,33 @@ const emptyValues = {
 
 const UpdateProfileModal = ({ open, handleClose }) => {
   const { user } = useSelector(userState);
+  const { showSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const [formValues, setFormValues] = useState({
     firstname: user?.firstname,
     lastname: user?.lastname,
     phone: user?.phone,
   });
+  const [formError, setFormError] = useState({});
+
   const handleSubmit = async () => {
+    const validationError = profileUserFormValidation(formValues);
+
+    if (Object.keys(validationError).length > 0) {
+      setFormError(validationError);
+      return;
+    }
     try {
       const res = await userRequset.post("/auth/update-profile", formValues);
       if (res.data && res.data.success) {
         dispatch(updateProfile(res.data.user));
         handleClose();
         setFormValues({ ...emptyValues });
+        showSnackbar(res.data.message);
       }
     } catch (error) {
       console.log(error);
+      showSnackbar(error?.response?.data?.message, "error");
     }
   };
 
@@ -60,6 +73,7 @@ const UpdateProfileModal = ({ open, handleClose }) => {
             onChange={handleChange}
             type={"text"}
             placeholder={"Enter First Name"}
+            errorMessage={formError.firstname}
           />
           <InputField
             label={"Last Name"}
@@ -68,6 +82,7 @@ const UpdateProfileModal = ({ open, handleClose }) => {
             onChange={handleChange}
             type={"text"}
             placeholder={"Enter Last Name"}
+            errorMessage={formError.lastname}
           />
           {user.role === "engineer" && (
             <InputField
@@ -77,6 +92,7 @@ const UpdateProfileModal = ({ open, handleClose }) => {
               onChange={handleChange}
               type={"number"}
               placeholder={"Enter Phone"}
+              errorMessage={formError.phone}
             />
           )}
         </div>

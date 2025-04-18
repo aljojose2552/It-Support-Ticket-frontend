@@ -10,6 +10,7 @@ const AddUserModal = ({
   userData,
   handleClose,
   isView,
+  formError,
 }) => {
   return (
     <Modal
@@ -18,7 +19,7 @@ const AddUserModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={()=>modalStyle(800)}>
+      <Box sx={() => modalStyle(800)}>
         <Typography
           id="modal-modal-title"
           variant="h6"
@@ -28,7 +29,7 @@ const AddUserModal = ({
           Add User
         </Typography>
 
-        <div className="flex gap-2 items-center mb-5">
+        <div className="flex gap-2 items-start mb-5">
           <InputField
             label={"First Name"}
             value={userData.firstname}
@@ -37,6 +38,7 @@ const AddUserModal = ({
             type={"text"}
             placeholder={"Enter First Name"}
             disabled={isView}
+            errorMessage={formError.firstname}
           />
           <InputField
             label={"Last Name"}
@@ -46,10 +48,11 @@ const AddUserModal = ({
             type={"text"}
             placeholder={"Enter Last Name"}
             disabled={isView}
+            errorMessage={formError.lastname}
           />
         </div>
 
-        <div className="flex gap-2 items-center mb-5">
+        <div className="flex gap-2 items-start mb-5">
           <InputField
             label={"Email"}
             value={userData.email}
@@ -58,6 +61,7 @@ const AddUserModal = ({
             type={"text"}
             placeholder={"Enter Email"}
             disabled={isView}
+            errorMessage={formError.email}
           />
           {!isView && (
             <InputField
@@ -68,6 +72,7 @@ const AddUserModal = ({
               type={"password"}
               placeholder={"Enter Password"}
               disabled={isView}
+              errorMessage={formError.password}
             />
           )}
         </div>

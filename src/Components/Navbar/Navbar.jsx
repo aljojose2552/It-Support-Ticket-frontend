@@ -5,9 +5,11 @@ import { Menu, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, userState } from "../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "../../context/snackbarContext";
 
 const Navbar = () => {
   const { user } = useSelector(userState);
+  const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -40,6 +42,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());
     handleClose();
+    showSnackbar("Logout Successfull");
   };
 
   return (

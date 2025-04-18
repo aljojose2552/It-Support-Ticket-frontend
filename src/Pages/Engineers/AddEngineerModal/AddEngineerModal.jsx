@@ -13,6 +13,7 @@ const AddEngineerModal = ({
   engineerData,
   handleClose,
   isView,
+  formError,
 }) => {
   // console.log(isView);
 
@@ -23,7 +24,7 @@ const AddEngineerModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={()=>modalStyle(800)}>
+      <Box sx={() => modalStyle(800)}>
         <Typography
           id="modal-modal-title"
           variant="h6"
@@ -33,7 +34,7 @@ const AddEngineerModal = ({
           Add Engineer
         </Typography>
 
-        <div className="flex gap-2 items-center mb-5">
+        <div className="flex gap-2 items-start mb-5">
           <InputField
             label={"First Name"}
             value={engineerData.firstname}
@@ -42,6 +43,7 @@ const AddEngineerModal = ({
             type={"text"}
             placeholder={"Enter First Name"}
             disabled={isView}
+            errorMessage={formError.firstname}
           />
           <InputField
             label={"Last Name"}
@@ -51,9 +53,10 @@ const AddEngineerModal = ({
             type={"text"}
             placeholder={"Enter Last Name"}
             disabled={isView}
+            errorMessage={formError.lastname}
           />
         </div>
-        <div className="flex gap-2 items-center mb-5">
+        <div className="flex gap-2 items-start mb-5">
           <InputField
             label={"Phone Number"}
             value={engineerData.phone}
@@ -62,6 +65,7 @@ const AddEngineerModal = ({
             type={"number"}
             placeholder={"Enter Phone Number"}
             disabled={isView}
+            errorMessage={formError.phone}
           />
           <SelectBoxField
             label={"Department"}
@@ -70,10 +74,11 @@ const AddEngineerModal = ({
             name="department"
             options={departmentOptions}
             disabled={isView}
+            errorMessage={formError.department}
           />
         </div>
 
-        <div className="flex gap-2 items-center mb-5">
+        <div className="flex gap-2 items-start mb-5">
           <InputField
             label={"Email"}
             value={engineerData.email}
@@ -82,6 +87,7 @@ const AddEngineerModal = ({
             type={"text"}
             placeholder={"Enter Email"}
             disabled={isView}
+            errorMessage={formError.email}
           />
           {!isView && (
             <InputField
@@ -92,10 +98,11 @@ const AddEngineerModal = ({
               type={"password"}
               placeholder={"Enter Password"}
               disabled={isView}
+              errorMessage={formError.password}
             />
           )}
         </div>
-        <div className="flex gap-2 items-center mb-5">
+        <div className="flex gap-2 items-start mb-5">
           <InputField
             label={"Designation"}
             value={engineerData.designation}
@@ -104,6 +111,7 @@ const AddEngineerModal = ({
             type={"text"}
             placeholder={"Enter Designation "}
             disabled={isView}
+            errorMessage={formError.designation}
           />
         </div>
 

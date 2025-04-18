@@ -5,14 +5,18 @@ import { publicRequest } from "../../apis/requestMethods";
 import AuthImage from "../../assets/images/AuthImage.png";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/auth/authSlice";
+import { loginFormValidation } from "../../utils/functions/formValidations";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { showSnackbar } = useSnackbar();
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+  const [formError, setFormError] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,6 +25,11 @@ const Login = () => {
 
   const onFormSubmit = async (event) => {
     event.preventDefault();
+    const validationError = loginFormValidation(user);
+    if (Object.keys(validationError).length > 0) {
+      setFormError(validationError);
+      return;
+    }
     try {
       const response = await publicRequest.post("/auth/login", user);
       console.log(response);
@@ -29,11 +38,14 @@ const Login = () => {
         dispatch(
           loginSuccess({ user: response.data.user, token: response.data.token })
         );
+        showSnackbar("Login Successfully");
+
         navigate("/");
       } else {
       }
     } catch (error) {
-      console.log(error?.response?.data?.message);
+      showSnackbar(error?.response?.data?.message, "error");
+      // console.log();
     }
   };
 
@@ -61,6 +73,7 @@ const Login = () => {
               value={user.email}
               type={"text"}
               placeholder={"Enter Email"}
+              errorMessage={formError.email}
             />
             <InputField
               name={"password"}
@@ -68,6 +81,7 @@ const Login = () => {
               value={user.password}
               type={"password"}
               placeholder={"Enter Password"}
+              errorMessage={formError.password}
             />
             <button className="mt-5 bg-blue-600 w-full h-[35px] text-white rounded-md">
               Login

@@ -18,9 +18,11 @@ const AddTicketModal = ({
   ticketData,
   handleClose,
   isView,
+  formError
 }) => {
   const { user } = useSelector(userState);
   const [status, setStatus] = useState("In Progress");
+  
   return (
     <Modal
       open={open}
@@ -50,15 +52,16 @@ const AddTicketModal = ({
           </div>
         ) : (
           <>
-            <div className="flex gap-2 items-center mb-5">
+            <div className="flex gap-2 items-start mb-5">
               <InputField
-                label={"Title"}
+                label={"Title*"}
                 value={ticketData.title}
                 name={"title"}
                 onChange={handleChange}
                 type={"text"}
                 placeholder={"Enter Title"}
                 disabled={isView}
+                errorMessage={formError.title}
               />
               <InputField
                 label={"Description"}
@@ -72,12 +75,13 @@ const AddTicketModal = ({
             </div>
             <div className="flex gap-2 items-center mb-5">
               <SelectBoxField
-                label={"Department"}
+                label={"Department*"}
                 value={ticketData.department}
                 onChange={handleChange}
                 name="department"
                 options={departmentOptions}
                 disabled={isView}
+                errorMessage={formError.department}
               />
             </div>
           </>
