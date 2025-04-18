@@ -10,9 +10,9 @@ export const InputField = ({
   isLogin,
   placeholder,
   disabled,
+  errorMessage,
   ...rest
 }) => {
-
   // const [isShow, setIsShow] = useState<boolean>(true)
   const [passwordType, setpasswordType] = useState(type);
   const handleShowPassword = () => {
@@ -30,7 +30,9 @@ export const InputField = ({
             {label}
           </label>
         )}
-        <div className="flex gap-2 bg-gray-100 w-full h-[40px] items-center rounded-md px-2 py-1">
+        <div
+          className={`flex gap-2 bg-gray-100 w-full h-[40px] items-center rounded-md px-2 py-1 ${errorMessage && "border border-red-500"}`}
+        >
           <input
             className="outline-none w-full text-sm bg-gray-100"
             type={type === "password" ? passwordType : type}
@@ -52,6 +54,9 @@ export const InputField = ({
             </div>
           )}
         </div>
+        {errorMessage && (
+          <p className="text-[12px] text-red-500">{errorMessage}</p>
+        )}
       </div>
     </div>
   );

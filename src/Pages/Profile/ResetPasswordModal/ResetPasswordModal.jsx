@@ -3,15 +3,19 @@ import React, { useState } from "react";
 import { modalStyle } from "../../../utils/constant";
 import { InputField } from "../../../Components/FormElements/InputField/InputField";
 import { userRequset } from "../../../apis/requestMethods";
+import { validateResetPasswordForm } from "../../../utils/functions/formValidations";
+import { useSnackbar } from "../../../context/SnackbarContext";
 
 const emptyFields = {
   oldpassword: "",
   newpassword: "",
 };
 const ResetPasswordModal = ({ open, handleClose }) => {
+  const { showSnackbar } = useSnackbar();
   const [formValues, setFormValues] = useState({
     ...emptyFields,
   });
+  const [formError, setFormError] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,6 +23,12 @@ const ResetPasswordModal = ({ open, handleClose }) => {
   };
 
   const handleSubmit = async (e) => {
+    const validationError = validateResetPasswordForm(formValues);
+
+    if (Object.keys(validationError).length > 0) {
+      setFormError(validationError);
+      return;
+    }
     try {
       const res = await userRequset.post("/auth/reset-password", formValues);
       if (res.data && res.data.success) {
@@ -26,9 +36,11 @@ const ResetPasswordModal = ({ open, handleClose }) => {
         setFormValues({
           ...emptyFields,
         });
+        showSnackbar(res.data.message);
       }
     } catch (error) {
       console.log(error);
+      showSnackbar(error?.response?.data?.message, "error");
     }
   };
   return (
@@ -55,6 +67,7 @@ const ResetPasswordModal = ({ open, handleClose }) => {
             onChange={handleChange}
             type={"text"}
             placeholder={"Enter Old Password"}
+            errorMessage={formError.oldpassword}
           />
           <InputField
             label={"New Password"}
@@ -63,6 +76,7 @@ const ResetPasswordModal = ({ open, handleClose }) => {
             onChange={handleChange}
             type={"text"}
             placeholder={"Enter New Password"}
+            errorMessage={formError.newpassword}
           />
         </div>
         <div className="flex justify-end gap-2 mt-5">

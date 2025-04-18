@@ -7,6 +7,8 @@ import Loader from "../../Components/Loader/Loader";
 import { userState } from "../../redux/auth/authSlice";
 import DeleteModal from "../../Components/DeleteModal/DeleteModal";
 import HeadingWithButton from "../../Components/HeadingWithButton/HeadingWithButton";
+import { validateEngineerForm } from "../../utils/functions/formValidations";
+import { useSnackbar } from "../../context/snackbarContext";
 const emptyData = {
   firstname: "",
   lastname: "",
@@ -18,12 +20,14 @@ const emptyData = {
 };
 
 const Engineers = () => {
+  const { showSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(true);
   const [addEngineer, setAddEngineer] = useState(false);
   const [engineerList, setEngineerList] = useState([]);
   const [engineerData, setEngineerData] = useState({
     ...emptyData,
   });
+  const [formError, setFormError] = useState({});
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [deleteId, setDeleteId] = useState("");
@@ -79,6 +83,12 @@ const Engineers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationError = validateEngineerForm(engineerData);
+
+    if (Object.keys(validationError).length > 0) {
+      setFormError(validationError);
+      return;
+    }
     try {
       const res = isEdit
         ? await userRequset.put(
@@ -91,9 +101,11 @@ const Engineers = () => {
         setEngineerData({ ...emptyData });
         fetchEngineerList();
         handleClose();
+        showSnackbar(res.data.message);
       }
     } catch (err) {
       console.log(err);
+      showSnackbar(err?.response?.data?.message, "error");
     }
   };
 
@@ -129,9 +141,11 @@ const Engineers = () => {
       if (res.data && res.data.success) {
         fetchEngineerList();
         handleCloseDeleteModal();
+        showSnackbar(res.data.message);
       }
     } catch (err) {
       console.log(err);
+      showSnackbar(err?.response?.data?.message, "error");
     }
   };
 
@@ -164,6 +178,7 @@ const Engineers = () => {
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         isView={isView}
+        formError={formError}
       />
 
       <DeleteModal

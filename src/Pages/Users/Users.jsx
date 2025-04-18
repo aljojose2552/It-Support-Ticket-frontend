@@ -6,6 +6,8 @@ import AddUserModal from "./AddUserModal/AddUserModal";
 import Loader from "../../Components/Loader/Loader";
 import DeleteModal from "../../Components/DeleteModal/DeleteModal";
 import HeadingWithButton from "../../Components/HeadingWithButton/HeadingWithButton";
+import { addUserFormValidation } from "../../utils/functions/formValidations";
+import { useSnackbar } from "../../context/snackbarContext";
 
 const emptyData = {
   firstname: "",
@@ -15,12 +17,14 @@ const emptyData = {
 };
 
 const Users = () => {
+  const { showSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(true);
   const [addUser, setAddUser] = useState(false);
   const [userList, setUserList] = useState([]);
   const [userData, setUserData] = useState({
     ...emptyData,
   });
+  const [formError, setFormError] = useState({});
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [deleteId, setDeleteId] = useState("");
@@ -83,6 +87,12 @@ const Users = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationError = addUserFormValidation(userData);
+
+    if (Object.keys(validationError).length > 0) {
+      setFormError(validationError);
+      return;
+    }
     try {
       const data = { ...userData, role: "user" };
       const res = isEdit
@@ -92,9 +102,11 @@ const Users = () => {
         setUserData({ ...emptyData });
         fetchUserList();
         handleClose();
+        showSnackbar(res.data.message);
       }
     } catch (err) {
       console.log(err);
+      showSnackbar(error?.response?.data?.message, "error");
     }
   };
 
@@ -113,9 +125,11 @@ const Users = () => {
       if (res.data && res.data.success) {
         fetchUserList();
         handleCloseDeleteModal();
+        showSnackbar(res.data.message);
       }
     } catch (err) {
       console.log(err);
+      showSnackbar(err?.response?.data?.message, "error");
     }
   };
 
@@ -150,6 +164,7 @@ const Users = () => {
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         isView={isView}
+        formError={formError}
       />
       <DeleteModal
         handleSubmit={deleteUser}

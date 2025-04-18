@@ -10,6 +10,8 @@ import DeleteModal from "../../Components/DeleteModal/DeleteModal";
 import Loader from "../../Components/Loader/Loader";
 import HeadingWithButton from "../../Components/HeadingWithButton/HeadingWithButton";
 import { updateResValues } from "../../utils/functions/updateTicketApiValues";
+import { addTicketForValidation } from "../../utils/functions/formValidations";
+import { useSnackbar } from "../../context/snackbarContext";
 
 const emptyData = {
   title: "",
@@ -30,6 +32,7 @@ const columns = [
 
 const Tickets = () => {
   const { user } = useSelector(userState);
+  const { showSnackbar } = useSnackbar();
   const { role } = user;
   const [isLoading, setIsLoading] = useState(true);
   const [addTicket, setAddTicket] = useState(false);
@@ -37,6 +40,7 @@ const Tickets = () => {
   const [TicketList, setTicketList] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState({});
   const [engineerList, setEngineerList] = useState([]);
+  const [formError, setFormError] = useState({});
   const [ticketData, setTicketData] = useState({
     ...emptyData,
   });
@@ -121,8 +125,13 @@ const Tickets = () => {
     setTicketData({ ...emptyData });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     // e.preventDefault();
+    const validationError = addTicketForValidation(ticketData);
+    if (Object.keys(validationError).length > 0) {
+      setFormError(validationError);
+      return;
+    }
     try {
       const res = isEdit
         ? await userRequset.put(
@@ -138,10 +147,12 @@ const Tickets = () => {
         } else {
           fetchTicketList();
         }
+        showSnackbar(res.data.message);
         handleClose();
       }
     } catch (err) {
       console.log(err);
+      showSnackbar(err?.response?.data?.message, "error");
     }
   };
 
@@ -154,9 +165,11 @@ const Tickets = () => {
       if (res.data && res.data.success) {
         fetchAssignedTickets();
         handleClose();
+        showSnackbar(res.data.message);
       }
     } catch (error) {
       console.log(error);
+      showSnackbar(error?.response?.data?.message, "error");
     }
   };
 
@@ -196,10 +209,12 @@ const Tickets = () => {
       if (res.data && res.data.success) {
         fetchTicketList();
         handleCloseDeleteModal();
+        showSnackbar(res.data.message);
       }
     } catch (err) {
       console.log(err);
-      alert(err?.response?.data?.message || "something went wrong");
+      // alert(err?.response?.data?.message || "something went wrong");
+      showSnackbar(err?.response?.data?.message, "error");
     }
   };
 
@@ -241,6 +256,7 @@ const Tickets = () => {
         handleSubmit={handleSubmit}
         isView={isView}
         handleStatusUpdate={handleStatusUpdate}
+        formError={formError}
       />
 
       {role === "admin" && (
