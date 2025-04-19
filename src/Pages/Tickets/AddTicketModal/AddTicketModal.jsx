@@ -42,7 +42,7 @@ const AddTicketModal = ({
         {user.role === "engineer" ? (
           <div className="flex gap-2 items-center mb-5">
             <SelectBoxField
-              label={"Status"}
+              label={"Status*"}
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               name="status"

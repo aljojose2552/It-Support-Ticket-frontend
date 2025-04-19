@@ -7,7 +7,7 @@ import Loader from "../../Components/Loader/Loader";
 import DeleteModal from "../../Components/DeleteModal/DeleteModal";
 import HeadingWithButton from "../../Components/HeadingWithButton/HeadingWithButton";
 import { addUserFormValidation } from "../../utils/functions/formValidations";
-import { useSnackbar } from "../../context/snackbarContext";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 const emptyData = {
   firstname: "",

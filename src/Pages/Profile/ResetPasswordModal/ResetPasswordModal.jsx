@@ -61,7 +61,7 @@ const ResetPasswordModal = ({ open, handleClose }) => {
         </Typography>
         <div className="flex flex-col gap-5">
           <InputField
-            label={"Old Passwrod"}
+            label={"Old Password*"}
             value={formValues.oldpassword}
             name={"oldpassword"}
             onChange={handleChange}
@@ -70,7 +70,7 @@ const ResetPasswordModal = ({ open, handleClose }) => {
             errorMessage={formError.oldpassword}
           />
           <InputField
-            label={"New Password"}
+            label={"New Password*"}
             value={formValues.newpassword}
             name={"newpassword"}
             onChange={handleChange}
