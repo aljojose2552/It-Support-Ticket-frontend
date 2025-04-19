@@ -11,7 +11,7 @@ import Loader from "../../Components/Loader/Loader";
 import HeadingWithButton from "../../Components/HeadingWithButton/HeadingWithButton";
 import { updateResValues } from "../../utils/functions/updateTicketApiValues";
 import { addTicketForValidation } from "../../utils/functions/formValidations";
-import { useSnackbar } from "../../context/snackbarContext";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 const emptyData = {
   title: "",

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfile, userState } from "../../../redux/auth/authSlice";
 import { InputField } from "../../../Components/FormElements/InputField/InputField";
 import { profileUserFormValidation } from "../../../utils/functions/formValidations";
-import { useSnackbar } from "../../../context/snackbarContext";
+import { useSnackbar } from "../../../context/SnackbarContext";
 const emptyValues = {
   firstname: "",
   lastname: "",
@@ -67,7 +67,7 @@ const UpdateProfileModal = ({ open, handleClose }) => {
         </Typography>
         <div className="flex flex-col gap-5">
           <InputField
-            label={"First Name"}
+            label={"First Name*"}
             value={formValues.firstname}
             name={"firstname"}
             onChange={handleChange}
@@ -76,7 +76,7 @@ const UpdateProfileModal = ({ open, handleClose }) => {
             errorMessage={formError.firstname}
           />
           <InputField
-            label={"Last Name"}
+            label={"Last Name*"}
             value={formValues.lastname}
             name={"lastname"}
             onChange={handleChange}
@@ -86,7 +86,7 @@ const UpdateProfileModal = ({ open, handleClose }) => {
           />
           {user.role === "engineer" && (
             <InputField
-              label={"Phone"}
+              label={"Phone*"}
               value={formValues.phone}
               name={"phone"}
               onChange={handleChange}
