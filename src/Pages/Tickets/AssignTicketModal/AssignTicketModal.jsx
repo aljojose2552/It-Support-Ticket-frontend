@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { modalStyle } from "../../../utils/constant";
 import SelectBoxField from "../../../Components/FormElements/SelectBoxField/SelectBoxField";
 import { userRequset } from "../../../apis/requestMethods";
-import { useSnackbar } from "../../../context/snackbarContext";
+import { useSnackbar } from "../../../context/SnackbarContext";
 
 const AssignTicketModal = ({
   open,
@@ -65,7 +65,7 @@ const AssignTicketModal = ({
           Assign Ticket
         </Typography>
         <SelectBoxField
-          label={"Select Engineer"}
+          label={"Select Engineer*"}
           value={engineer}
           onChange={(e) => setEngineer(e.target.value)}
           options={engineerOptions}

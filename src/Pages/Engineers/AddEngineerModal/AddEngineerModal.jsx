@@ -36,7 +36,7 @@ const AddEngineerModal = ({
 
         <div className="flex gap-2 items-start mb-5">
           <InputField
-            label={"First Name"}
+            label={"First Name*"}
             value={engineerData.firstname}
             name={"firstname"}
             onChange={handleChange}
@@ -46,7 +46,7 @@ const AddEngineerModal = ({
             errorMessage={formError.firstname}
           />
           <InputField
-            label={"Last Name"}
+            label={"Last Name*"}
             value={engineerData.lastname}
             name={"lastname"}
             onChange={handleChange}
@@ -58,7 +58,7 @@ const AddEngineerModal = ({
         </div>
         <div className="flex gap-2 items-start mb-5">
           <InputField
-            label={"Phone Number"}
+            label={"Phone Number*"}
             value={engineerData.phone}
             name={"phone"}
             onChange={handleChange}
@@ -68,7 +68,7 @@ const AddEngineerModal = ({
             errorMessage={formError.phone}
           />
           <SelectBoxField
-            label={"Department"}
+            label={"Department*"}
             value={engineerData.department}
             onChange={handleChange}
             name="department"
@@ -80,7 +80,7 @@ const AddEngineerModal = ({
 
         <div className="flex gap-2 items-start mb-5">
           <InputField
-            label={"Email"}
+            label={"Email*"}
             value={engineerData.email}
             name={"email"}
             onChange={handleChange}
@@ -91,7 +91,7 @@ const AddEngineerModal = ({
           />
           {!isView && (
             <InputField
-              label={"Password"}
+              label={"Password*"}
               value={engineerData.password}
               name={"password"}
               onChange={handleChange}
@@ -104,7 +104,7 @@ const AddEngineerModal = ({
         </div>
         <div className="flex gap-2 items-start mb-5">
           <InputField
-            label={"Designation"}
+            label={"Designation*"}
             value={engineerData.designation}
             name={"designation"}
             onChange={handleChange}

@@ -5,7 +5,7 @@ import { Menu, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, userState } from "../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "../../context/snackbarContext";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 const Navbar = () => {
   const { user } = useSelector(userState);
